@@ -1,0 +1,24 @@
+{
+  "name": "code-engine-sample",
+  "version": "1.0.0",
+  "description": "A pretty simple node.js application. Gotta start some place.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1ft-seabass/code-engine-sample.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1ft-seabass/code-engine-sample/issues"
+  },
+  "homepage": "https://github.com/1ft-seabass/code-engine-sample#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
