@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:image_build": "ibmcloud ce buildrun submit --build techxchange-2023-app-01-build-d25g9 --wait",
+    "build:update_app": "ibmcloud ce application update --name techxchange-2023-app-01 --wait",
+    "build": "git push origin main && npm run build:image_build && npm run build:update_app"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,7 @@
   },
   "homepage": "https://github.com/1ft-seabass/code-engine-sample#readme",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.18.2"
   }
 }

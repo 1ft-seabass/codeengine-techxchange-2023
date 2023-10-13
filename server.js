@@ -1,7 +1,12 @@
+const dotenv = require('dotenv')
+dotenv.config({ path: './.env/local.env' })
+
 const express = require('express');
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
+
+console.log(`LAUNCH_MODE : ${process.env.LAUNCH_MODE}`);
 
 // bodyParser
 app.use(express.json())
