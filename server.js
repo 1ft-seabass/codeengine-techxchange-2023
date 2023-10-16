@@ -13,10 +13,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/get/sample', (req, res) => {
+  console.log('/get/sample');
   res.send({"result":"GET OK!"})
 });
 
 app.get('/get/mode', (req, res) => {
+  console.log('/get/mode');
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
