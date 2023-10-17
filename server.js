@@ -22,6 +22,16 @@ app.get('/get/mode', (req, res) => {
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
+app.post('/post/message', (req, res) => {
+  console.log('/post/message');
+
+  const responseJSON = {};
+  responseJSON.text = "こんにちは～！";
+
+  res.send(responseJSON)
+});
+
+
 app.listen(process.env.PORT || 8080, () => {
   console.log("server start!");
   console.log(`app listening at http://localhost:${process.env.PORT || 8080}`)
