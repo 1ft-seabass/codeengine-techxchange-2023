@@ -11,10 +11,6 @@ console.log(`LAUNCH_MODE : ${process.env.LAUNCH_MODE}`);
 // OpenAI API キー
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-
-console.log(`process.env.OPENAI_API_KEY : ${process.env.OPENAI_API_KEY}`);
-console.log(`OPENAI_API_KEY : ${OPENAI_API_KEY}`);
-
 // openai ライブラリの読み込み
 const OpenAI = require("openai");
 
@@ -39,7 +35,7 @@ app.get('/get/mode', (req, res) => {
 });
 
 app.post('/post/message', async (req, res) => {
-  console.log('/post/message');
+  console.log('/api/post/message');
 
   const responseJSON = {};
 
@@ -61,7 +57,7 @@ app.post('/post/message', async (req, res) => {
   res.send(responseJSON)
 });
 
-app.get('/get/message', async (req, res) => {
+app.get('/api/get/message', async (req, res) => {
   console.log('/get/message');
 
   const responseJSON = {};
