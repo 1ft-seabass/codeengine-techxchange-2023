@@ -11,6 +11,10 @@ console.log(`LAUNCH_MODE : ${process.env.LAUNCH_MODE}`);
 // OpenAI API キー
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+
+console.log(`process.env.OPENAI_API_KEY : ${process.env.OPENAI_API_KEY}`);
+console.log(`OPENAI_API_KEY : ${OPENAI_API_KEY}`);
+
 // openai ライブラリの読み込み
 const OpenAI = require("openai");
 

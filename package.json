@@ -8,8 +8,7 @@
     "start": "node server.js",
     "build:image_build": "ibmcloud ce buildrun submit --build techxchange-2023-app-01-build-d25g9 --wait",
     "build:update_app": "ibmcloud ce application update --name techxchange-2023-app-01 --wait",
-    "build": "git push origin main && npm run build:image_build && npm run build:update_app",
-    "select": "ibmcloud target -g default;ibmcloud ce project select --name \"Code Engine 79\";ibmcloud ce project current;"
+    "build": "npm run build:image_build && npm run build:update_app"
   },
   "repository": {
     "type": "git",
