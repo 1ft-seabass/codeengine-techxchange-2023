@@ -34,7 +34,7 @@ app.get('/get/mode', (req, res) => {
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
-app.post('/post/message', async (req, res) => {
+app.post('/api/post/message', async (req, res) => {
   console.log('/api/post/message');
 
   const responseJSON = {};
@@ -58,7 +58,7 @@ app.post('/post/message', async (req, res) => {
 });
 
 app.get('/api/get/message', async (req, res) => {
-  console.log('/get/message');
+  console.log('/api/get/message');
 
   const responseJSON = {};
 
