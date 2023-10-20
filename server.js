@@ -57,6 +57,17 @@ app.post('/api/post/message', async (req, res) => {
   res.send(responseJSON)
 });
 
+app.post('/api/post/log', async (req, res) => {
+  console.log('/api/post/log');
+
+  const responseJSON = {};
+  responseJSON.result = "OK";
+
+  console.log(req.body.message);
+
+  res.send(responseJSON)
+});
+
 app.get('/api/get/message', async (req, res) => {
   console.log('/api/get/message');
 
