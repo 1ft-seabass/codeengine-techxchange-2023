@@ -8,6 +8,18 @@ app.use(express.static(__dirname + '/public'));
 
 console.log(`LAUNCH_MODE : ${process.env.LAUNCH_MODE}`);
 
+// OpenAI API キー
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// openai ライブラリの読み込み
+const OpenAI = require("openai");
+
+// OpenAI の API を使うために上記の設定を割り当てて準備
+// 以後 openai というオブジェクトで使える
+const openai = new OpenAI({
+  apiKey: OPENAI_API_KEY
+});
+
 // bodyParser
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -22,11 +34,48 @@ app.get('/get/mode', (req, res) => {
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
-app.post('/post/message', (req, res) => {
+app.post('/post/message', async (req, res) => {
   console.log('/post/message');
 
   const responseJSON = {};
-  responseJSON.text = "こんにちは～！";
+
+  const content = req.body.message;
+
+  console.log(`質問内容 : ${content}`);
+
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "user", content: content }
+    ],
+    model: "gpt-3.5-turbo", // モデルは gpt-3.5-turbo を今回使う。
+  });
+
+  // 結果表示
+  responseJSON.message = completion.choices[0].message.content;
+  console.log(responseJSON);
+
+  res.send(responseJSON)
+});
+
+app.get('/get/message', async (req, res) => {
+  console.log('/get/message');
+
+  const responseJSON = {};
+
+  const content = req.query.message;
+
+  console.log(`質問内容 : ${content}`);
+
+  const completion = await openai.chat.completions.create({
+    messages: [
+      { role: "user", content: content }
+    ],
+    model: "gpt-3.5-turbo", // モデルは gpt-3.5-turbo を今回使う。
+  });
+
+  // 結果表示
+  responseJSON.message = completion.choices[0].message.content;
+  console.log(responseJSON);
 
   res.send(responseJSON)
 });
