@@ -34,6 +34,26 @@ app.get('/get/mode', (req, res) => {
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
+app.post('/api/post/iot/message', async (req, res) => {
+  console.log('/api/post/iot/message');
+
+  const responseJSON = {};
+
+  const content = req.body.message;
+
+  console.log(`質問内容 : ${content}`);
+
+  const prompt = createPrompt(content);
+
+  const completion = await openai.chat.completions.create(prompt);
+
+  // 結果表示
+  responseJSON.message = completion.choices[0].message.content;
+  console.log(responseJSON);
+
+  res.send(responseJSON)
+});
+
 app.post('/api/post/message', async (req, res) => {
   console.log('/api/post/message');
 
@@ -67,7 +87,7 @@ createPrompt = (_content) => {
   }
 
   _prompt.messages.push({ role: "user", content: _content });
-  
+
   return _prompt;
 }
 
