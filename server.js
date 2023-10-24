@@ -34,6 +34,7 @@ app.get('/get/mode', (req, res) => {
   res.send({"LAUNCH_MODE":process.env.LAUNCH_MODE})
 });
 
+// IoT
 app.post('/api/post/iot/message', async (req, res) => {
   console.log('/api/post/iot/message');
 
@@ -41,17 +42,11 @@ app.post('/api/post/iot/message', async (req, res) => {
 
   const content = req.body.message;
 
-  console.log(`質問内容 : ${content}`);
-
-  const prompt = createPrompt(content);
-
-  const completion = await openai.chat.completions.create(prompt);
-
   // 結果表示
-  responseJSON.message = completion.choices[0].message.content;
+  responseJSON.response = await iotPrompt(content);
   console.log(responseJSON);
 
-  res.send(responseJSON)
+  res.send(responseJSON);
 });
 
 app.post('/api/post/message', async (req, res) => {
@@ -74,11 +69,109 @@ app.post('/api/post/message', async (req, res) => {
   res.send(responseJSON)
 });
 
+iotPrompt = async (_content) => {
+  
+  console.log(`質問内容 : ${_content}`);
+
+  const functions = [
+    {
+        "name": "rgb_json",
+        "description": "色名から RGB 値の情報を得られた場合",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "led という値が固定値を入力されます"
+                },
+                "result": {
+                    "type": "boolean",
+                    "description": "色名が RGB値 で認識されたので true は認識が入ります。"
+                },
+                "r": {
+                    "type": "number",
+                    "description": "色名から RGB 値の情報を得たときの R 値"
+                },
+                "g": {
+                    "type": "number",
+                    "description": "色名から RGB 値の情報を得たときの G 値"
+                },
+                "b": {
+                    "type": "number",
+                    "description": "色名から RGB 値の情報を得たときの B 値"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "色名がRGB値に認識されたときの追加の説明。"
+                }
+            },
+            "required": [
+                "type",
+                "result",
+                "r",
+                "g",
+                "b",
+                "message"
+            ]
+        }
+    },
+    {
+        "name": "rgb_json_not_found",
+        "description": "色名から RGB 値の情報を得られなかった場合",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "led という値が固定値を入力されます"
+                },
+                "result": {
+                    "type": "boolean",
+                    "description": "色名が RGB値 で認識されなかったので false が入ります。"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "色名が RGB 値に認識されなかったときの説明。あるいは、色名がRGB値に認識されなかったときの説明。色名の例外は「色名が認識されない例外処理です」と説明します。"
+                }
+            },
+            "required": [
+                "type",
+                "result",
+                "message"
+            ]
+        }
+    }
+  ];
+
+  const _prompt = {
+    messages: [],
+    model: "gpt-3.5-turbo-0613",
+    functions:functions,
+    function_call: "auto"
+  };
+
+  const _command = `
+- 色名がRGB値で認識されたら rgb_json を使います。
+- 色名がRGB値で認識されない例外処理は rgb_json_not_found を使います。
+  
+今回はこのルールで「${_content}」でお願いします
+`;
+
+  _prompt.messages.push({ role: "user", content: _command });
+
+  const completion = await openai.chat.completions.create(_prompt);
+
+  // 結果表示
+  const message = JSON.parse(completion.choices[0].message.function_call.arguments);
+
+  return message;
+}
+
 createPrompt = (_content) => {
 
   const _prompt = {
     messages: [],
-    model: "gpt-3.5-turbo", // モデルは gpt-3.5-turbo を今回使う。
+    model: "gpt-3.5-turbo"
   };
 
   if(process.env.OPENAI_SYSTEM_VALUE){
@@ -122,6 +215,20 @@ app.get('/api/get/message', async (req, res) => {
   res.send(responseJSON)
 });
 
+
+app.get('/api/get/iot/message', async (req, res) => {
+  console.log('/api/get/iot/message');
+
+  const responseJSON = {};
+
+  const content = req.query.message;
+
+  // 結果表示
+  responseJSON.message = await iotPrompt(content);
+  console.log(responseJSON);
+
+  res.send(responseJSON);
+});
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("server start!");
