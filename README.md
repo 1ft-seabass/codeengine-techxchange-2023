@@ -1,13 +1,13 @@
-# Hello
+# Code Engine で現実世界につないで技術と対話するデモ演舞
 
-A pretty simple node.js application. Gotta start some place.
+![b1495d53b03a350bd7d1c7d54316d6eb](https://i.gyazo.com/b1495d53b03a350bd7d1c7d54316d6eb.jpg)
 
-- - -
+このリポジトリは <a href="https://www.ibm.com/jp-ja/events/techxchange" target="_blank">IBM TechXchange Conference Japan</a> の「Code Engine で現実世界につないで技術と対話するデモ演舞」についての資料と実際のソースコードページです。
 
-As noted in [the main README](../README.md), this sample has two pieces:
+## XREAL Air というデバイスで Code Engine 経由で OpenAI 社 ChatGPT API と会話する仕組み
 
-- a `build` script which will build the container image(s) used
-- a `run` script which deploys resources that use those images
+（まとめ中）
 
-The main purpose of this example is the `run` script, but the `build`
-script is included for complete educational (and reuse) purposes.
+## XREAL Air から Code Engine 経由で OpenAI 社 ChatGPT API を組み合わせつつ IoT と連携する仕組み
+
+（まとめ中）
