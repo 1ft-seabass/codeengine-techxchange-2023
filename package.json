@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/1ft-seabass/code-engine-sample#readme",
   "dependencies": {
+    "axios": "^1.5.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "openai": "^4.12.4"

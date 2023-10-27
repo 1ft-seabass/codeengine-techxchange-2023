@@ -1,6 +1,7 @@
 const dotenv = require('dotenv')
 dotenv.config({ path: './.env/local.env' })
 
+const axios = require('axios');
 const express = require('express');
 const app = express();
 
@@ -52,26 +53,37 @@ app.post('/api/post/iot/message', async (req, res) => {
 app.post('/api/post/message', async (req, res) => {
   console.log('/api/post/message');
 
-  const responseJSON = {};
-
   const content = req.body.message;
 
-  console.log(`質問内容 : ${content}`);
+  const responseJSON = await firstPrompt(content);
 
-  const prompt = createPrompt(content);
-
-  const completion = await openai.chat.completions.create(prompt);
-
-  // 結果表示
-  responseJSON.message = completion.choices[0].message.content;
-  console.log(responseJSON);
-
-  res.send(responseJSON)
+  res.send(responseJSON);
 });
+
+messageNodeRED = async (_target, _message) => {
+
+  console.log("messageNodeRED");
+
+  const currentRequestData = {};
+  currentRequestData.message = `${_target} : ${_message}`;
+
+  console.log(currentRequestData.message);
+
+  const configAPI = {
+    url:process.env.NODERED_URL,
+    method:'post',
+    data:currentRequestData
+  }
+
+  const response = await axios.request(configAPI);
+  
+  console.log(response.data);
+}
 
 iotPrompt = async (_content) => {
   
   console.log(`質問内容 : ${_content}`);
+  await messageNodeRED("自分",_content);
 
   const functions = [
     {
@@ -162,12 +174,20 @@ iotPrompt = async (_content) => {
   const completion = await openai.chat.completions.create(_prompt);
 
   // 結果表示
-  const message = JSON.parse(completion.choices[0].message.function_call.arguments);
+  const arguments = completion.choices[0].message.function_call.arguments;
+  const message = JSON.parse(arguments);
+
+  await messageNodeRED("ChatGPT",arguments);
 
   return message;
 }
 
-createPrompt = (_content) => {
+firstPrompt = async (_content) => {
+
+  console.log(`質問内容 : ${_content}`);
+  await messageNodeRED("自分",_content);
+
+  const responseJSON = {};
 
   const _prompt = {
     messages: [],
@@ -181,7 +201,14 @@ createPrompt = (_content) => {
 
   _prompt.messages.push({ role: "user", content: _content });
 
-  return _prompt;
+  const completion = await openai.chat.completions.create(_prompt);
+
+  // 結果表示
+  responseJSON.message = completion.choices[0].message.content;
+  console.log(responseJSON);
+  await messageNodeRED("ChatGPT",responseJSON.message);
+
+  return responseJSON;
 }
 
 app.post('/api/post/log', async (req, res) => {
@@ -198,21 +225,11 @@ app.post('/api/post/log', async (req, res) => {
 app.get('/api/get/message', async (req, res) => {
   console.log('/api/get/message');
 
-  const responseJSON = {};
-
   const content = req.query.message;
 
-  console.log(`質問内容 : ${content}`);
+  const responseJSON = await firstPrompt(content);
 
-  const prompt = createPrompt(content);
-
-  const completion = await openai.chat.completions.create(prompt);
-
-  // 結果表示
-  responseJSON.message = completion.choices[0].message.content;
-  console.log(responseJSON);
-
-  res.send(responseJSON)
+  res.send(responseJSON);
 });
 
 
