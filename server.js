@@ -283,6 +283,8 @@ app.get('/api/get/iot/message', async (req, res) => {
 
   // 結果表示
   responseJSON.message = await iotPrompt(content);
+  // 文字列化
+  responseJSON.message = JSON.stringify(responseJSON.message, null ,"");
   console.log(responseJSON);
 
   res.send(responseJSON);
