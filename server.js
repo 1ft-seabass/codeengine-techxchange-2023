@@ -44,7 +44,10 @@ app.post('/api/post/iot/message', async (req, res) => {
   const content = req.body.message;
 
   // 結果表示
-  responseJSON.response = await iotPrompt(content);
+  responseJSON.message = await iotPrompt(content);
+  // 文字列化
+  responseJSON.message = JSON.stringify(responseJSON.message, null ,"");
+  
   console.log(responseJSON);
 
   res.send(responseJSON);
