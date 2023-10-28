@@ -60,6 +60,7 @@ app.post('/api/post/message', async (req, res) => {
   res.send(responseJSON);
 });
 
+// obniz へのメッセージング処理
 messageObniz = async ( _messageString ) => {
 
   console.log("messageObniz");
@@ -73,7 +74,19 @@ messageObniz = async ( _messageString ) => {
     method:'get'
   };
 
-  const response = await axios.request(configAPI);
+  let response;
+  
+  try {
+    response = await axios.request(configAPI);
+  } catch (e){
+    response = {
+      "data":{
+        "type":"obniz error" ,
+        "error":e ,
+        "chatGPTResponse":_messageString
+      }
+    }
+  }
   
   console.log(response.data);
 }
@@ -200,7 +213,8 @@ iotPrompt = async (_content) => {
   // obniz
   const obnizMessageString = `{"type":"${message.type}","r":${message.r},"g":${message.g},"b":${message.b},"message":"OK"}`;
   if(message.result){
-    console.log("結果：色名が認識れました！");
+    console.log("結果：色名が認識されました！");
+    // obniz へ命令する
     await messageObniz(obnizMessageString);
   } else {
     console.log("結果：色名が認識されない例外処理です");
