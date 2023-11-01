@@ -37,6 +37,9 @@
 
 ## Oculus Quest + Code Engine + ChatGPT API
 
+実際の動作の様子
+https://twitter.com/1ft_seabass/status/1718799213558140946
+
 ![8c9b53df2a797f2e9a33c3ae4b65a8e5](https://i.gyazo.com/8c9b53df2a797f2e9a33c3ae4b65a8e5.jpg)
 
 .
